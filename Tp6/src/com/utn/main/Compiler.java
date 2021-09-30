@@ -18,15 +18,34 @@ public class Compiler {
 
     //Se calculan 20 días laborables por seis meses, por los minutos de cantidadHoras que trabaja el empleado
     public int calcularTiempoDeSimulacion() {
-        return 20 * 6 * 60 * 12;
+        return 20 * 6 * 60 * 9;
     }
 
 
-    public int calcularIntervaloDeArribo() {
-        Random r = new Random();
+    public Integer calcularIntervaloDeArribo() {
+        /*Random r = new Random();
         int low = 10;
         int high = 16;
         return r.nextInt(high - low) + low;
+        */
+        int b = 12;
+        int c = 2;
+        double a = 1 / (c * Math.sqrt(2 * Math.PI) );
+        double yi = HV;
+        double func = 0;
+        Double xi = 0.0;
+        while (yi > func){
+            Random r = new Random();
+
+            double aux = Math.random();
+            double aux2 = Math.random();
+            xi = 8 + 8 * aux;
+            yi = a * aux2;
+            func = a * Math.pow(Math.E, - Math.sqrt(xi-b)/(2*Math.sqrt(c)));
+
+        }
+        System.out.println(xi.intValue());
+        return xi.intValue();
     }
 
     public int calcularTiempoDeAtencion() {

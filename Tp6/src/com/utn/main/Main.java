@@ -22,7 +22,7 @@ public class Main {
         int STS = 0; //Sumatoria de tiempos de salida de tickets
 
         //CANTIDAD EMPLEADOS
-        int cantEmpleados = 3;
+        int cantEmpleados = 4;
         int cantidadHoras = 8; //2924
         int HV = 1000000;
         //Calculo de Tiempo Ocioso:
@@ -36,7 +36,7 @@ public class Main {
 
         Integer tiempoSimulacion = compiler.calcularTiempoDeSimulacion();
         compiler.inicializacionDeSimulacion(cantEmpleados, STO, ITO, TPS);
-        int calc = tiempoSimulacion - 0 * 6 * 60 * cantidadHoras;
+        int calc = tiempoSimulacion - 20 * 6 * 60 * cantidadHoras;
 
         while (tiempo < tiempoSimulacion) {
 
@@ -74,7 +74,9 @@ public class Main {
             } else {
                 // TPLL >= Algun TPS ----> SALE UN TICKET
                 tiempo = TPS.stream().min(Integer::compare).get();
-                STS = STS + tiempo;
+                if(tiempo <= 20 * 6 * 60 * cantidadHoras) {
+                    STS = STS + tiempo;
+                }
                 CT = CT - 1;
                 int emplAux = compiler.empleadoConMenorTPS(cantEmpleados, TPS);
 
@@ -95,35 +97,11 @@ public class Main {
 
         }
 
-        //HAY TODAVIA TICKETS POR ATENDER:
-        //TPLL = HV;
-       /* while (CT != 0) {
-            // TPLL >= Algun TPS ----> SALE UN TICKET
-            tiempo = TPS.stream().min(Integer::compare).get();
-            STS = STS + tiempo;
-            CT = CT - 1;
-            int emplAux = compiler.empleadoConMenorTPS(cantEmpleados, TPS);
-
-            if (CT >= cantEmpleados) {
-                TA = compiler.calcularTiempoDeAtencion();
-                //TPS.add(emplAux, tiempo + TA);
-                compiler.actualizarValor(TPS, emplAux, tiempo + TA);
-                continue;
-            } else {
-                //ITO.add(emplAux,tiempo);
-                //TPS.add(emplAux,HV);
-                compiler.actualizarValor(ITO, emplAux, tiempo);
-                compiler.actualizarValor(TPS, emplAux, HV);
-
-                continue;
-            }
-        }*/
-
 
         //TERMINA LA SIMULACION
         System.out.println("_________________INICIO SIMULACION_____________________");
         System.out.println("CANTIDAD DE EMPLEADOS: " + cantEmpleados + " TRABAJANDO " + cantidadHoras + " HORAS");
-        System.out.println("TIEMPO TOTAL DE SIMULACION: " + tiempoSimulacion);
+       // System.out.println("TIEMPO TOTAL DE SIMULACION: " + tiempoSimulacion);
 
         for (int i = 0; i < cantEmpleados; i++) {
             int numeroEmpleado = i + 1;
@@ -138,11 +116,17 @@ public class Main {
 
         Float cantTicketsAtendidosPorDia = tiempoSimulacion.floatValue() / ticketsQueEntraron.floatValue() / 60 * cantidadHoras;
         System.out.println("Cantidad de tickets atendidos por hora: " + cantTicketsAtendidosPorDia);
-        Integer aux =  (STS - STLL) / (ticketsQueEntraron.intValue()-CT);
-        System.out.println("Promedio de permanencia en el sistema de ticket " + aux.toString() );
+        //Integer aux =  (STS - STLL) / ticketsQueEntraron;
+        //System.out.println("Promedio de permanencia en el sistema de ticket " + aux.toString() );
+
+        System.out.println("\n::ANALISIS DE COSTOS::");
+        double unSueldoDeEmpleado =  6 * 20 * cantidadHoras * 450;
+        double totalSueldos = unSueldoDeEmpleado * cantEmpleados * 1.25;
+        double resultado = totalSueldos / (ticketsQueEntraron-CT);
+        System.out.println("Total de sueldos: " + totalSueldos);
+        System.out.println("Costo por ticket atendido: " + resultado);
+
         System.out.println("_________________________FIN___________________________\n");
-
-
     }
 }
 
